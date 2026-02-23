@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boon Coach Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Text:ital@0;1&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F0F3F7; color: #2E353D; min-height: 100vh; }
+
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: #466FF6;
+      letter-spacing: -0.5px;
+      cursor: pointer;
+    }
+    .nav-logo span {
+      font-family: 'DM Serif Text', serif;
+      font-style: italic;
+      color: #2E353D;
+      font-size: 14px;
+      font-weight: 400;
+      margin-left: 8px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-link {
+      font-size: 14px; font-weight: 600; color: #6b7280;
+      cursor: pointer; padding: 6px 12px; border-radius: 6px;
+      transition: all 0.15s; border: none; background: none;
+    }
+    .nav-link:hover { color: #466FF6; background: #F0F3F7; }
+    .nav-link.active { color: #466FF6; }
+    .nav-search {
+      display: flex; align-items: center; background: #F0F3F7;
+      border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 8px 14px; gap: 8px; width: 280px;
+    }
+    .nav-search input {
+      border: none; background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 14px;
+      color: #2E353D; outline: none; width: 100%;
+    }
+    .nav-search input::placeholder { color: #9ca3af; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* PROGRAMS HERO */
+    .programs-hero {
+      background: linear-gradient(135deg, #1A253B 0%, #365ABD 100%);
+      padding: 72px 40px;
+      text-align: center;
+    }
+    .hero-label {
+      font-weight: 800; font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: #CCD9FF; margin-bottom: 16px;
+    }
+    .programs-hero h1 {
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 44px; color: #fff; line-height: 1.15; margin-bottom: 14px;
+    }
+    .programs-hero h1 em {
+      font-family: 'DM Serif Text', serif; font-style: italic;
+      color: #CCD9FF; font-weight: 400;
+    }
+    .programs-hero p {
+      color: #CCD9FF; font-size: 16px; max-width: 500px;
+      margin: 0 auto 32px; line-height: 1.6;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #466FF6; color: #fff; font-weight: 700;
+      font-size: 14px; padding: 12px 24px; border-radius: 8px;
+      cursor: pointer; border: none; transition: background 0.15s;
+    }
+    .hero-cta:hover { background: #365ABD; }
+
+    .programs-main { max-width: 1100px; margin: 0 auto; padding: 56px 24px; }
+    .programs-section-label {
+      font-weight: 800; font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: #9ca3af;
+      margin-bottom: 24px; text-align: center;
+    }
+
+    .program-cards {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 24px; margin-bottom: 64px;
+    }
+    .program-card {
+      background: #fff; border-radius: 16px; padding: 36px;
+      border: 2px solid transparent; cursor: pointer;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .program-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    }
+    .program-card.scale::before  { background: #466FF6; }
+    .program-card.grow::before   { background: #6CD893; }
+    .program-card.exec::before   { background: #C47ACC; }
+    .program-card.together::before { background: #FF6D6A; }
+    .program-card:hover { box-shadow: 0 8px 32px rgba(70,111,246,0.12); transform: translateY(-3px); }
+    .program-card.scale:hover  { border-color: #466FF6; }
+    .program-card.grow:hover   { border-color: #6CD893; box-shadow: 0 8px 32px rgba(108,216,147,0.15); }
+    .program-card.exec:hover   { border-color: #C47ACC; box-shadow: 0 8px 32px rgba(196,122,204,0.15); }
+    .program-card.together:hover { border-color: #FF6D6A; box-shadow: 0 8px 32px rgba(255,109,106,0.15); }
+
+    .program-badge {
+      display: inline-block; font-weight: 800; font-size: 11px;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 20px; margin-bottom: 16px;
+    }
+    .scale .program-badge  { background: #EEF2FF; color: #466FF6; }
+    .grow .program-badge   { background: #ECFDF5; color: #16a34a; }
+    .exec .program-badge   { background: #FAF5FF; color: #9333ea; }
+    .together .program-badge { background: #FFF1F0; color: #e53e3e; }
+
+    .program-name {
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 26px; color: #2E353D; margin-bottom: 6px;
+    }
+    .program-tagline {
+      font-family: 'DM Serif Text', serif; font-style: italic;
+      font-size: 15px; color: #6b7280; margin-bottom: 16px;
+    }
+    .program-description {
+      font-size: 14px; color: #6b7280; line-height: 1.7; margin-bottom: 24px;
+    }
+    .program-details { display: flex; flex-direction: column; gap: 10px; }
+    .program-detail-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; color: #4b5563;
+    }
+    .detail-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+    .detail-label { font-weight: 700; color: #2E353D; min-width: 72px; flex-shrink: 0; }
+    .program-arrow {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700; margin-top: 24px;
+    }
+    .scale .program-arrow  { color: #466FF6; }
+    .grow .program-arrow   { color: #16a34a; }
+    .exec .program-arrow   { color: #9333ea; }
+    .together .program-arrow { color: #e53e3e; }
+
+    .quick-links-title {
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 20px; color: #2E353D; margin-bottom: 16px;
+    }
+    .quick-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .quick-link-card {
+      background: #fff; border-radius: 10px; padding: 20px;
+      cursor: pointer; border: 2px solid transparent;
+      transition: all 0.15s; display: flex; align-items: center; gap: 14px;
+    }
+    .quick-link-card:hover { border-color: #466FF6; box-shadow: 0 4px 16px rgba(70,111,246,0.1); }
+    .ql-icon {
+      font-size: 20px; width: 44px; height: 44px; background: #EEF2FF;
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+    .ql-title { font-weight: 700; font-size: 14px; color: #2E353D; margin-bottom: 2px; }
+    .ql-sub { font-size: 12px; color: #9ca3af; }
+
+    /* LIBRARY */
+    .library-hero {
+      background: linear-gradient(135deg, #1A253B 0%, #365ABD 100%);
+      padding: 48px 40px; text-align: center;
+    }
+    .library-hero h1 {
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 36px; color: #fff; margin-bottom: 10px;
+    }
+    .library-hero h1 em {
+      font-family: 'DM Serif Text', serif; font-style: italic;
+      color: #CCD9FF; font-weight: 400;
+    }
+    .library-hero p { color: #CCD9FF; font-size: 15px; }
+
+    .library-main { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+    .category-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+    .tab {
+      padding: 8px 16px; border-radius: 20px; font-size: 13px;
+      font-weight: 600; cursor: pointer; border: 2px solid #e2e8f0;
+      transition: all 0.15s; background: #fff; color: #6b7280;
+    }
+    .tab:hover { border-color: #466FF6; color: #466FF6; }
+    .tab.active { background: #466FF6; color: #fff; border-color: #466FF6; }
+    .section-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 20px;
+    }
+    .section-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 20px; }
+    .section-count { font-size: 13px; color: #9ca3af; }
+
+    .article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .article-card {
+      background: #fff; border-radius: 12px; padding: 24px;
+      cursor: pointer; border: 2px solid transparent; transition: all 0.15s;
+    }
+    .article-card:hover {
+      border-color: #466FF6;
+      box-shadow: 0 4px 20px rgba(70,111,246,0.1);
+      transform: translateY(-2px);
+    }
+    .card-category {
+      font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #466FF6; margin-bottom: 10px;
+    }
+    .card-title {
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 16px; color: #2E353D; margin-bottom: 8px; line-height: 1.35;
+    }
+    .card-excerpt { font-size: 13px; color: #6b7280; line-height: 1.6; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .tag {
+      background: #F0F3F7; color: #6b7280;
+      font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+    }
+
+    /* ARTICLE */
+    #articleView { display: none; max-width: 740px; margin: 40px auto; padding: 0 24px 80px; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: #466FF6; font-weight: 600; font-size: 14px;
+      cursor: pointer; margin-bottom: 32px; background: none; border: none; padding: 0;
+    }
+    .back-btn:hover { text-decoration: underline; }
+    .article-category-label {
+      font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #466FF6; margin-bottom: 10px;
+    }
+    .article-title {
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 32px; color: #2E353D; line-height: 1.2; margin-bottom: 16px;
+    }
+    .article-excerpt {
+      font-size: 16px; color: #6b7280; line-height: 1.6;
+      border-left: 3px solid #466FF6; padding-left: 16px; margin-bottom: 32px;
+    }
+    .article-body {
+      background: #fff; border-radius: 12px; padding: 40px;
+      font-size: 15px; line-height: 1.8; color: #2E353D; white-space: pre-wrap;
+    }
+
+    .loading {
+      text-align: center; padding: 80px 20px;
+      color: #9ca3af; font-size: 15px; grid-column: 1/-1;
+    }
+    .loading-spinner {
+      width: 32px; height: 32px; border: 3px solid #e2e8f0;
+      border-top-color: #466FF6; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .search-results-label { font-size: 14px; color: #6b7280; margin-bottom: 16px; }
+    .search-results-label strong { color: #2E353D; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .programs-hero, .library-hero { padding: 48px 20px; }
+      .programs-hero h1 { font-size: 30px; }
+      .program-cards { grid-template-columns: 1fr; }
+      .quick-links { grid-template-columns: 1fr; }
+      .nav-search { display: none; }
+      .programs-main, .library-main { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('programs')">BOON <span>Coach Library</span></div>
+  <div class="nav-right">
+    <button class="nav-link active" id="navPrograms" onclick="showPage('programs')">Programs</button>
+    <button class="nav-link" id="navLibrary" onclick="showPage('library')">Full Library</button>
+    <div class="nav-search" id="navSearchBox" style="display:none;">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search frameworks, protocols..." />
+    </div>
+  </div>
+</nav>
+
+<!-- PROGRAMS PAGE -->
+<div id="programsPage" class="page active">
+  <div class="programs-hero">
+    <div class="hero-label">For Boon Coaches</div>
+    <h1>Your guide to <em>every program.</em></h1>
+    <p>Frameworks, protocols, and session guides — organized by program so you always know where to look.</p>
+    <button class="hero-cta" onclick="showPage('library')">Browse the Full Library →</button>
+  </div>
+
+  <div class="programs-main">
+    <div class="programs-section-label">Our Programs</div>
+    <div class="program-cards">
+
+      <div class="program-card scale" onclick="showPage('library')">
+        <div class="program-badge">Scale</div>
+        <div class="program-name">Boon Scale</div>
+        <div class="program-tagline">1:1 coaching for everyone — not just execs</div>
+        <div class="program-description">Always-on coaching for all employees. Clients book sessions as needed, with coaches matched to their role and context. The backbone of Boon's coaching model.</div>
+        <div class="program-details">
+          <div class="program-detail-row">
+            <span class="detail-icon">👤</span>
+            <span class="detail-label">Client</span>
+            <span>Individual contributors and managers at any level</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">🎯</span>
+            <span class="detail-label">Focus</span>
+            <span>Goal setting, career development, day-to-day challenges</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">📅</span>
+            <span class="detail-label">Format</span>
+            <span>On-demand 1:1 sessions, client-driven agenda</span>
+          </div>
+        </div>
+        <div class="program-arrow">View resources →</div>
+      </div>
+
+      <div class="program-card grow" onclick="showPage('library')">
+        <div class="program-badge">Grow</div>
+        <div class="program-name">Boon Grow</div>
+        <div class="program-tagline">When your managers are underwater</div>
+        <div class="program-description">Cohort-based leadership development for new and rising managers. A structured program that builds the skills most first-time managers were never taught.</div>
+        <div class="program-details">
+          <div class="program-detail-row">
+            <span class="detail-icon">👤</span>
+            <span class="detail-label">Client</span>
+            <span>First-time and rising managers, people leaders</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">🎯</span>
+            <span class="detail-label">Focus</span>
+            <span>Feedback, delegation, difficult conversations, team dynamics</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">📅</span>
+            <span class="detail-label">Format</span>
+            <span>Structured 6-session program over ~3 months</span>
+          </div>
+        </div>
+        <div class="program-arrow">View resources →</div>
+      </div>
+
+      <div class="program-card exec" onclick="showPage('library')">
+        <div class="program-badge">Exec</div>
+        <div class="program-name">Boon Exec</div>
+        <div class="program-tagline">When the stakes are highest</div>
+        <div class="program-description">Confidential coaching for senior leaders. A trusted thinking partner for the decisions that ripple across the org — strategy, influence, and leadership identity.</div>
+        <div class="program-details">
+          <div class="program-detail-row">
+            <span class="detail-icon">👤</span>
+            <span class="detail-label">Client</span>
+            <span>VPs, Directors, C-suite, and senior leaders</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">🎯</span>
+            <span class="detail-label">Focus</span>
+            <span>Strategic vision, executive presence, high-stakes decisions</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">📅</span>
+            <span class="detail-label">Format</span>
+            <span>Ongoing 1:1, deeply personalized and confidential</span>
+          </div>
+        </div>
+        <div class="program-arrow">View resources →</div>
+      </div>
+
+      <div class="program-card together" onclick="showPage('library')">
+        <div class="program-badge">Together</div>
+        <div class="program-name">Boon Together</div>
+        <div class="program-tagline">When the team needs to get on the same page</div>
+        <div class="program-description">Facilitated sessions for teams that need to align. Offsites, department kickoffs, moments of change — builds shared language and real momentum.</div>
+        <div class="program-details">
+          <div class="program-detail-row">
+            <span class="detail-icon">👤</span>
+            <span class="detail-label">Client</span>
+            <span>Teams, departments, cross-functional groups</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">🎯</span>
+            <span class="detail-label">Focus</span>
+            <span>Alignment, psychological safety, shared language, trust</span>
+          </div>
+          <div class="program-detail-row">
+            <span class="detail-icon">📅</span>
+            <span class="detail-label">Format</span>
+            <span>Workshops and facilitated sessions, team-based</span>
+          </div>
+        </div>
+        <div class="program-arrow">View resources →</div>
+      </div>
+
+    </div>
+
+    <div class="quick-links-title">Quick Access</div>
+    <div class="quick-links">
+      <div class="quick-link-card" onclick="goToCategory('coaching-models')">
+        <div class="ql-icon">🧠</div>
+        <div>
+          <div class="ql-title">Coaching Models</div>
+          <div class="ql-sub">GROW, Ikigai, SCARF & more</div>
+        </div>
+      </div>
+      <div class="quick-link-card" onclick="goToCategory('protocols')">
+        <div class="ql-icon">📋</div>
+        <div>
+          <div class="ql-title">Protocols & Policies</div>
+          <div class="ql-sub">Crisis, no-shows, session guidelines</div>
+        </div>
+      </div>
+      <div class="quick-link-card" onclick="goToCategory('templates')">
+        <div class="ql-icon">✉️</div>
+        <div>
+          <div class="ql-title">Email Templates</div>
+          <div class="ql-sub">Welcome, check-ins, cancellations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARY PAGE -->
+<div id="libraryPage" class="page">
+  <div class="library-hero">
+    <div class="hero-label">Full Library</div>
+    <h1>Frameworks, protocols, <em>and more.</em></h1>
+    <p>Everything in one place — search or browse by category.</p>
+  </div>
+  <div class="library-main">
+    <div class="category-tabs" id="categoryTabs">
+      <div class="tab active" data-slug="all" onclick="filterCategory('all', this)">All</div>
+    </div>
+    <div class="section-header">
+      <div class="section-title" id="sectionTitle">All Articles</div>
+      <div class="section-count" id="sectionCount"></div>
+    </div>
+    <div id="searchResultsLabel" class="search-results-label" style="display:none;"></div>
+    <div class="article-grid" id="articleGrid">
+      <div class="loading"><div class="loading-spinner"></div>Loading the library...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE VIEW -->
+<div id="articleView">
+  <button class="back-btn" onclick="closeArticle()">← Back to Library</button>
+  <div class="article-category-label" id="articleCategoryLabel"></div>
+  <h1 class="article-title" id="articleTitle"></h1>
+  <p class="article-excerpt" id="articleExcerpt"></p>
+  <div class="article-body" id="articleBody"></div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://psgoldsuyeigwqryenlv.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzZ29sZHN1eWVpZ3dxcnllbmx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5OTQ3MjMsImV4cCI6MjA4NjU3MDcyM30.YBLAxd46LxIi-EBaoY3qihpPpzv24YtTvx44-iEpO84';
+
+  let allArticles = [];
+  let allCategories = [];
+  let activeCategory = 'all';
+
+  async function fetchData() {
+    try {
+      const [articlesRes, categoriesRes] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&order=order_index`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        }),
+        fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=order_index`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        })
+      ]);
+      allArticles = await articlesRes.json();
+      allCategories = await categoriesRes.json();
+      buildCategoryTabs();
+      renderArticles(allArticles);
+    } catch (err) {
+      document.getElementById('articleGrid').innerHTML = `<div class="loading">Unable to load content. Please try again later.</div>`;
+    }
+  }
+
+  function buildCategoryTabs() {
+    const tabs = document.getElementById('categoryTabs');
+    allCategories.forEach(cat => {
+      const tab = document.createElement('div');
+      tab.className = 'tab';
+      tab.dataset.slug = cat.slug;
+      tab.textContent = `${cat.icon || ''} ${cat.name}`.trim();
+      tab.onclick = () => filterCategory(cat.slug, tab);
+      tabs.appendChild(tab);
+    });
+  }
+
+  function filterCategory(slug, el) {
+    activeCategory = slug;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const activeTab = el || document.querySelector(`.tab[data-slug="${slug}"]`);
+    if (activeTab) activeTab.classList.add('active');
+    const filtered = slug === 'all' ? allArticles : allArticles.filter(a => a.category_slug === slug);
+    const cat = allCategories.find(c => c.slug === slug);
+    document.getElementById('sectionTitle').textContent = slug === 'all' ? 'All Articles' : (cat?.name || slug);
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResultsLabel').style.display = 'none';
+    renderArticles(filtered);
+  }
+
+  function goToCategory(slug) {
+    showPage('library');
+    setTimeout(() => filterCategory(slug, null), 50);
+  }
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(name + 'Page').classList.add('active');
+    document.getElementById('articleView').style.display = 'none';
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('nav' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
+    document.getElementById('navSearchBox').style.display = name === 'library' ? 'flex' : 'none';
+    window.scrollTo(0, 0);
+  }
+
+  function renderArticles(articles) {
+    const grid = document.getElementById('articleGrid');
+    document.getElementById('sectionCount').textContent = `${articles.length} article${articles.length !== 1 ? 's' : ''}`;
+    if (articles.length === 0) {
+      grid.innerHTML = `<div class="loading">No articles found.</div>`;
+      return;
+    }
+    grid.innerHTML = articles.map(a => {
+      const cat = allCategories.find(c => c.slug === a.category_slug);
+      const tags = (a.tags || []).slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('');
+      return `<div class="article-card" onclick="showArticle('${a.id}')">
+        <div class="card-category">${(cat?.icon || '')} ${cat?.name || a.category_slug}</div>
+        <div class="card-title">${a.title}</div>
+        <div class="card-excerpt">${a.excerpt || ''}</div>
+        ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function showArticle(id) {
+    const article = allArticles.find(a => a.id === id);
+    if (!article) return;
+    const cat = allCategories.find(c => c.slug === article.category_slug);
+    document.getElementById('articleCategoryLabel').textContent = `${cat?.icon || ''} ${cat?.name || ''}`;
+    document.getElementById('articleTitle').textContent = article.title;
+    document.getElementById('articleExcerpt').textContent = article.excerpt || '';
+    document.getElementById('articleBody').textContent = article.content;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('articleView').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  function closeArticle() {
+    document.getElementById('articleView').style.display = 'none';
+    showPage('library');
+  }
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    const label = document.getElementById('searchResultsLabel');
+    if (!q) {
+      label.style.display = 'none';
+      filterCategory(activeCategory, document.querySelector(`.tab[data-slug="${activeCategory}"]`));
+      return;
+    }
+    const results = allArticles.filter(a =>
+      a.title.toLowerCase().includes(q) ||
+      (a.excerpt || '').toLowerCase().includes(q) ||
+      (a.content || '').toLowerCase().includes(q) ||
+      (a.tags || []).some(t => t.toLowerCase().includes(q))
+    );
+    label.style.display = 'block';
+    label.innerHTML = `Showing <strong>${results.length}</strong> result${results.length !== 1 ? 's' : ''} for "<strong>${e.target.value}</strong>"`;
+    document.getElementById('sectionTitle').textContent = 'Search Results';
+    document.getElementById('sectionCount').textContent = '';
+    renderArticles(results);
+  });
+
+  fetchData();
+</script>
+</body>
+</html>
