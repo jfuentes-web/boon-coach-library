@@ -209,22 +209,6 @@
       border-top: 1px solid #f0f0f0;
     }
 
-    .program-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .program-badge {
-      background: #CCD9FF;
-      color: #365ABD;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
     .cta-button {
       background: #466FF6;
       color: white;
@@ -297,15 +281,6 @@
       clear: both;
     }
 
-    .modal-tagline {
-      font-size: 13px;
-      font-weight: 600;
-      color: #FF6D6A;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 20px;
-    }
-
     .modal-section {
       margin-bottom: 24px;
     }
@@ -326,23 +301,6 @@
       line-height: 1.7;
       color: #555;
       margin-bottom: 8px;
-    }
-
-    .modal-models {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .modal-model-badge {
-      background: #E8F0FF;
-      color: #365ABD;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      border: 1px solid #CCD9FF;
     }
 
     .modal-structure {
@@ -368,13 +326,6 @@
       font-size: 13px;
       line-height: 1.6;
       color: #555;
-    }
-
-    .session-title {
-      font-weight: 600;
-      color: #365ABD;
-      display: block;
-      margin-bottom: 4px;
     }
 
     /* Overview Section */
@@ -463,10 +414,9 @@
     .design-note {
       font-size: 14px;
       line-height: 1.8;
-      color: #555;
+      color: #666;
       text-align: center;
       font-style: italic;
-      color: #666;
       margin-top: 20px;
     }
 
@@ -519,13 +469,6 @@
         padding: 40px 20px;
       }
     }
-
-    /* Loading */
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #999;
-    }
   </style>
 </head>
 <body>
@@ -569,7 +512,7 @@
   <!-- Programs Section -->
   <div class="programs-container">
     <div class="programs-grid" id="programsGrid">
-      <div class="loading">Loading programs...</div>
+      <!-- Programs will be inserted here -->
     </div>
   </div>
 
@@ -608,47 +551,28 @@
     <div class="modal-content">
       <span class="modal-close">&times;</span>
       <h2 id="modalTitle"></h2>
-      <p class="modal-tagline" id="modalTagline"></p>
       
       <div class="modal-section">
-        <div class="modal-section-title">Overview</div>
-        <p id="modalOverview"></p>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Ideal For</div>
-        <div id="modalIdealFor"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Focus Areas</div>
-        <p id="modalFocusAreas"></p>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Key Coaching Models</div>
-        <div class="modal-models" id="modalModels"></div>
+        <div class="modal-section-title">Description</div>
+        <p id="modalDescription"></p>
       </div>
 
       <div class="modal-structure">
         <h4>Six-Session Structure</h4>
-        <div id="modalStructure"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Full Description</div>
-        <p id="modalDescription"></p>
+        <div class="session">
+          <strong>Session 1 - Introductory Session:</strong> Align on goals, clarify expectations, and co-create a roadmap that reflects the client's personal and professional aspirations.
+        </div>
+        <div class="session">
+          <strong>Sessions 2–5 - Core Sessions:</strong> Explore the client's goal using 2–4 targeted coaching themes based on the program focus and the client's unique context.
+        </div>
+        <div class="session">
+          <strong>Session 6 - Final Session - Reflection & Review:</strong> Celebrate growth, consolidate insights, and map meaningful next steps.
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Initialize Supabase
-    const SUPABASE_URL = 'https://psgoldsuyeigwqryenlv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzZ29sZHN1eWVpZ3dxcnllbmx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5OTQ3MjMsImV4cCI6MjA4NjU3MDcyM30.YBLAxd46LxIi-EBaoY3qihpPpzv24YtTvx44-iEpO84';
-    const { createClient } = window.supabase;
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     const programEmojis = {
       'pathfinder': '🧭',
       'impact-architect': '⚙️',
@@ -657,92 +581,58 @@
       'power-player': '👑'
     };
 
-    const sessionPrograms = [
-      'pathfinder',
-      'impact-architect',
-      'rising-star',
-      'change-maker',
-      'power-player'
-    ];
+    const programDescriptions = {
+      'pathfinder': 'This program includes personal branding, career mapping, networking, and goal-setting, and is designed for those seeking career clarity, role transitions, or internal mobility. Over six sessions, clients align on goals, explore their career path using targeted frameworks, and map meaningful next steps.',
+      'impact-architect': 'This path focuses on time management, prioritization, decision-making, and maintaining peak performance without burnout. Designed for those juggling multiple priorities, seeking to increase focus and decrease burnout, or earning a promotion. Clients learn to manage their time strategically and align activities with goals.',
+      'rising-star': 'This path focuses on essential management skills like giving feedback, leading inclusive teams, running effective meetings, and setting clear expectations. Designed for first-time managers, those preparing for leadership, or building leadership confidence. Clients develop the foundational skills needed to lead effectively.',
+      'change-maker': 'This path focuses on fostering inclusive cultures, psychological safety, unconscious bias, and leading diverse teams effectively. Designed for leaders building trust, uplifting others, and influencing organizational culture. Clients develop the awareness and skills to create psychologically safe, inclusive environments.',
+      'power-player': 'This coaching path helps experienced leaders refine their strategic thinking, executive presence, stakeholder management, and influence at the highest levels. Designed for decision makers, cross-functional collaboration, and change management. Clients develop the strategic and interpersonal mastery needed for executive leadership.'
+    };
 
-    async function loadPrograms() {
-      try {
-        const { data, error } = await supabase
-          .from('session_programs')
-          .select('*')
-          .in('slug', sessionPrograms)
-          .order('id');
+    const programNames = {
+      'pathfinder': 'The Pathfinder',
+      'impact-architect': 'The Impact Architect',
+      'rising-star': 'The Rising Star',
+      'change-maker': 'The Change Maker',
+      'power-player': 'The Power Player'
+    };
 
-        if (error) throw error;
+    function loadPrograms() {
+      const programsGrid = document.getElementById('programsGrid');
+      programsGrid.innerHTML = '';
 
-        const programsGrid = document.getElementById('programsGrid');
-        programsGrid.innerHTML = '';
+      const slugs = ['pathfinder', 'impact-architect', 'rising-star', 'change-maker', 'power-player'];
 
-        if (data && data.length > 0) {
-          data.forEach(program => {
-            const emoji = programEmojis[program.slug] || '📌';
-            const card = document.createElement('div');
-            card.className = 'program-card';
-            card.onclick = () => openModal(program);
+      slugs.forEach(slug => {
+        const emoji = programEmojis[slug];
+        const name = programNames[slug];
+        const description = programDescriptions[slug];
 
-            const ideals = program.ideal_for ? program.ideal_for.split(',').map(s => s.trim()) : [];
+        const card = document.createElement('div');
+        card.className = 'program-card';
+        card.onclick = () => openModal(slug, name, description);
 
-            card.innerHTML = `
-              <div class="program-card-content">
-                <div class="program-name">
-                  <span class="program-emoji">${emoji}</span>
-                  ${program.name}
-                </div>
-                <div class="program-tagline">${program.focus_areas || 'Leadership Development'}</div>
-                <p class="program-description">${program.description ? program.description.substring(0, 120) + '...' : 'A transformative coaching program.'}</p>
-                <div class="program-ideal-for">Ideal For:</div>
-                <div class="program-badges">
-                  ${ideals.slice(0, 3).map(ideal => `<span class="program-badge">${ideal}</span>`).join('')}
-                </div>
-                <button class="cta-button">View Details</button>
-              </div>
-            `;
+        card.innerHTML = `
+          <div class="program-card-content">
+            <div class="program-name">
+              <span class="program-emoji">${emoji}</span>
+              ${name}
+            </div>
+            <p class="program-description">${description.substring(0, 120)}...</p>
+            <button class="cta-button">View Details</button>
+          </div>
+        `;
 
-            programsGrid.appendChild(card);
-          });
-        }
-      } catch (error) {
-        console.error('Error loading programs:', error);
-        document.getElementById('programsGrid').innerHTML = '<div class="loading">Error loading programs. Please refresh.</div>';
-      }
+        programsGrid.appendChild(card);
+      });
     }
 
-    function openModal(program) {
+    function openModal(slug, name, description) {
       const modal = document.getElementById('programModal');
-      const emoji = programEmojis[program.slug] || '📌';
+      const emoji = programEmojis[slug];
       
-      document.getElementById('modalTitle').textContent = `${emoji} ${program.name}`;
-      document.getElementById('modalTagline').textContent = program.focus_areas || 'Leadership Development';
-      document.getElementById('modalOverview').textContent = program.overview || '';
-      
-      // Ideal For
-      const ideals = program.ideal_for ? program.ideal_for.split(',').map(s => s.trim()) : [];
-      document.getElementById('modalIdealFor').innerHTML = ideals.map(ideal => 
-        `<span class="program-badge" style="margin-right: 8px; margin-bottom: 8px;">${ideal}</span>`
-      ).join('');
-
-      document.getElementById('modalFocusAreas').textContent = program.focus_areas || '';
-
-      // Coaching Models
-      const models = program.coaching_models ? program.coaching_models.split(',').map(s => s.trim()) : [];
-      document.getElementById('modalModels').innerHTML = models.map(model => 
-        `<div class="modal-model-badge">${model}</div>`
-      ).join('');
-
-      // Structure
-      const structure = program.structure || '';
-      document.getElementById('modalStructure').innerHTML = structure
-        .split('. ')
-        .filter(s => s.trim())
-        .map(sentence => `<div class="session">${sentence}.</div>`)
-        .join('');
-
-      document.getElementById('modalDescription').textContent = program.description || '';
+      document.getElementById('modalTitle').textContent = `${emoji} ${name}`;
+      document.getElementById('modalDescription').textContent = description;
 
       modal.style.display = 'block';
     }
