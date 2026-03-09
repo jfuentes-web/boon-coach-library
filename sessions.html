@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session Based Programs - Boon Coach Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Text:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F0F3F7;
+      color: #2E353D;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #466FF6;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #2E353D;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #466FF6;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #466FF6 0%, #365ABD 100%);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: rgba(255, 109, 106, 0.1);
+      border-radius: 50%;
+      filter: blur(60px);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 18px;
+      line-height: 1.6;
+      opacity: 0.95;
+      margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+      font-family: 'DM Serif Text', serif;
+      font-style: italic;
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    /* Programs Container */
+    .programs-container {
+      max-width: 1200px;
+      margin: -40px auto 60px;
+      padding: 0 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    /* Program Card */
+    .program-card {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-left: 4px solid #466FF6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .program-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(70, 111, 246, 0.15);
+    }
+
+    .program-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, rgba(70, 111, 246, 0.05), rgba(255, 109, 106, 0.05));
+      border-radius: 50%;
+      transform: translate(30px, -30px);
+    }
+
+    .program-card-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .program-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #466FF6;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .program-emoji {
+      font-size: 24px;
+    }
+
+    .program-tagline {
+      font-size: 13px;
+      font-weight: 600;
+      color: #FF6D6A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .program-description {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 16px;
+      min-height: 50px;
+    }
+
+    .program-ideal-for {
+      font-size: 12px;
+      font-weight: 600;
+      color: #365ABD;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .program-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .program-badge {
+      background: #CCD9FF;
+      color: #365ABD;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .cta-button {
+      background: #466FF6;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .cta-button:hover {
+      background: #365ABD;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background-color: #fefeff;
+      margin: 40px auto;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: #000;
+    }
+
+    .modal h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 28px;
+      color: #466FF6;
+      margin-bottom: 12px;
+      clear: both;
+    }
+
+    .modal-tagline {
+      font-size: 13px;
+      font-weight: 600;
+      color: #FF6D6A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+    }
+
+    .modal-section {
+      margin-bottom: 24px;
+    }
+
+    .modal-section-title {
+      font-family: 'DM Serif Text', serif;
+      font-style: italic;
+      font-size: 14px;
+      font-weight: 600;
+      color: #365ABD;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .modal-section p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .modal-models {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .modal-model-badge {
+      background: #E8F0FF;
+      color: #365ABD;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #CCD9FF;
+    }
+
+    .modal-structure {
+      background: #F8FAFF;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #466FF6;
+      margin-top: 16px;
+    }
+
+    .modal-structure h4 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #466FF6;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .session {
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    .session-title {
+      font-weight: 600;
+      color: #365ABD;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* Overview Section */
+    .overview-section {
+      background: white;
+      padding: 60px 40px;
+      margin-bottom: 40px;
+    }
+
+    .overview-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .overview-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #2E353D;
+      margin-bottom: 20px;
+    }
+
+    .overview-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    /* Program Design Section */
+    .design-section {
+      background: #F8FAFF;
+      padding: 60px 40px;
+    }
+
+    .design-content {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .design-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #466FF6;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .design-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .design-card {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .design-card-number {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #FF6D6A;
+      margin-bottom: 12px;
+    }
+
+    .design-card-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #365ABD;
+      margin-bottom: 12px;
+    }
+
+    .design-card-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #666;
+    }
+
+    .design-note {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #555;
+      text-align: center;
+      font-style: italic;
+      color: #666;
+      margin-top: 20px;
+    }
+
+    /* Footer */
+    .footer {
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      padding: 40px;
+      text-align: center;
+      font-size: 13px;
+      color: #999;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+        flex-direction: column;
+        height: auto;
+        gap: 12px;
+      }
+
+      .hero {
+        padding: 40px 20px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .programs-container {
+        padding: 0 20px;
+        margin: -20px auto 40px;
+      }
+
+      .programs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        margin: 20px;
+        padding: 24px;
+      }
+
+      .overview-section {
+        padding: 40px 20px;
+      }
+
+      .design-section {
+        padding: 40px 20px;
+      }
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span>👋</span> Boon Coach Library
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Full Library</a></li>
+      <li><a href="sessions.html" class="active">Session Programs</a></li>
+      <li><a href="#about">Resources</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Session-Based Coaching Programs</h1>
+      <p>Structured pathways for meaningful growth</p>
+      <p class="hero-subtitle">Six sessions. Thoughtful design. Lasting impact.</p>
+    </div>
+  </div>
+
+  <!-- Overview Section -->
+  <div class="overview-section">
+    <div class="overview-content">
+      <h2 class="overview-title">Our Philosophy</h2>
+      <p class="overview-text">
+        At Boon, we believe that meaningful growth is holistic—it happens when individuals are seen, heard, and supported as whole people. Our Session-Based Coaching Programs are designed to uphold this belief, offering a structured yet flexible approach that empowers professionals to thrive both personally and professionally.
+      </p>
+      <p class="overview-text">
+        These programs are more than a series of conversations. They are thoughtfully designed experiences integrating intentional reflection, strategic action, and adaptive support. Whether navigating career transitions, deepening leadership skills, or building resilience, each program is tailored to meet the evolving needs of the individual.
+      </p>
+      <p class="overview-text">
+        Each program is designed for six sessions over approximately three months and consists of several components that can be used to guide the coaching experience. Professional growth doesn't happen in a vacuum. By honoring the complexity of each individual's journey, we create space for lasting transformation.
+      </p>
+    </div>
+  </div>
+
+  <!-- Programs Section -->
+  <div class="programs-container">
+    <div class="programs-grid" id="programsGrid">
+      <div class="loading">Loading programs...</div>
+    </div>
+  </div>
+
+  <!-- Program Design Section -->
+  <div class="design-section">
+    <div class="design-content">
+      <h2 class="design-title">How Our Programs Work</h2>
+      <div class="design-grid">
+        <div class="design-card">
+          <div class="design-card-number">1</div>
+          <div class="design-card-title">Introductory Session</div>
+          <p class="design-card-text">Align on goals, clarify expectations, and co-create a roadmap that reflects the client's personal and professional aspirations.</p>
+        </div>
+        <div class="design-card">
+          <div class="design-card-number">2–5</div>
+          <div class="design-card-title">Core Sessions</div>
+          <p class="design-card-text">Explore the client's goal using 2–4 targeted coaching themes based on the program focus and the client's unique context.</p>
+        </div>
+        <div class="design-card">
+          <div class="design-card-number">6</div>
+          <div class="design-card-title">Final Session – Reflection & Review</div>
+          <p class="design-card-text">Celebrate growth, consolidate insights, and map meaningful next steps.</p>
+        </div>
+      </div>
+      <p class="design-note">Our programs are designed to support individuals in achieving key leadership and career milestones while keeping them rooted in their identities.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Boon Coach Library • Session-Based Programs designed for sustainable growth</p>
+  </div>
+
+  <!-- Modal -->
+  <div id="programModal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p class="modal-tagline" id="modalTagline"></p>
+      
+      <div class="modal-section">
+        <div class="modal-section-title">Overview</div>
+        <p id="modalOverview"></p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Ideal For</div>
+        <div id="modalIdealFor"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Focus Areas</div>
+        <p id="modalFocusAreas"></p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Key Coaching Models</div>
+        <div class="modal-models" id="modalModels"></div>
+      </div>
+
+      <div class="modal-structure">
+        <h4>Six-Session Structure</h4>
+        <div id="modalStructure"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Full Description</div>
+        <p id="modalDescription"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Supabase
+    const SUPABASE_URL = 'https://psgoldsuyeigwqryenlv.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzZ29sZHN1eWVpZ3dxcnllbmx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5OTQ3MjMsImV4cCI6MjA4NjU3MDcyM30.YBLAxd46LxIi-EBaoY3qihpPpzv24YtTvx44-iEpO84';
+    const { createClient } = window.supabase;
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const programEmojis = {
+      'pathfinder': '🧭',
+      'impact-architect': '⚙️',
+      'rising-star': '⭐',
+      'change-maker': '🔄',
+      'power-player': '👑'
+    };
+
+    const sessionPrograms = [
+      'pathfinder',
+      'impact-architect',
+      'rising-star',
+      'change-maker',
+      'power-player'
+    ];
+
+    async function loadPrograms() {
+      try {
+        const { data, error } = await supabase
+          .from('session_programs')
+          .select('*')
+          .in('slug', sessionPrograms)
+          .order('id');
+
+        if (error) throw error;
+
+        const programsGrid = document.getElementById('programsGrid');
+        programsGrid.innerHTML = '';
+
+        if (data && data.length > 0) {
+          data.forEach(program => {
+            const emoji = programEmojis[program.slug] || '📌';
+            const card = document.createElement('div');
+            card.className = 'program-card';
+            card.onclick = () => openModal(program);
+
+            const ideals = program.ideal_for ? program.ideal_for.split(',').map(s => s.trim()) : [];
+
+            card.innerHTML = `
+              <div class="program-card-content">
+                <div class="program-name">
+                  <span class="program-emoji">${emoji}</span>
+                  ${program.name}
+                </div>
+                <div class="program-tagline">${program.focus_areas || 'Leadership Development'}</div>
+                <p class="program-description">${program.description ? program.description.substring(0, 120) + '...' : 'A transformative coaching program.'}</p>
+                <div class="program-ideal-for">Ideal For:</div>
+                <div class="program-badges">
+                  ${ideals.slice(0, 3).map(ideal => `<span class="program-badge">${ideal}</span>`).join('')}
+                </div>
+                <button class="cta-button">View Details</button>
+              </div>
+            `;
+
+            programsGrid.appendChild(card);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading programs:', error);
+        document.getElementById('programsGrid').innerHTML = '<div class="loading">Error loading programs. Please refresh.</div>';
+      }
+    }
+
+    function openModal(program) {
+      const modal = document.getElementById('programModal');
+      const emoji = programEmojis[program.slug] || '📌';
+      
+      document.getElementById('modalTitle').textContent = `${emoji} ${program.name}`;
+      document.getElementById('modalTagline').textContent = program.focus_areas || 'Leadership Development';
+      document.getElementById('modalOverview').textContent = program.overview || '';
+      
+      // Ideal For
+      const ideals = program.ideal_for ? program.ideal_for.split(',').map(s => s.trim()) : [];
+      document.getElementById('modalIdealFor').innerHTML = ideals.map(ideal => 
+        `<span class="program-badge" style="margin-right: 8px; margin-bottom: 8px;">${ideal}</span>`
+      ).join('');
+
+      document.getElementById('modalFocusAreas').textContent = program.focus_areas || '';
+
+      // Coaching Models
+      const models = program.coaching_models ? program.coaching_models.split(',').map(s => s.trim()) : [];
+      document.getElementById('modalModels').innerHTML = models.map(model => 
+        `<div class="modal-model-badge">${model}</div>`
+      ).join('');
+
+      // Structure
+      const structure = program.structure || '';
+      document.getElementById('modalStructure').innerHTML = structure
+        .split('. ')
+        .filter(s => s.trim())
+        .map(sentence => `<div class="session">${sentence}.</div>`)
+        .join('');
+
+      document.getElementById('modalDescription').textContent = program.description || '';
+
+      modal.style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('programModal').style.display = 'none';
+    }
+
+    // Modal controls
+    document.querySelector('.modal-close').onclick = closeModal;
+    window.onclick = function(event) {
+      const modal = document.getElementById('programModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
+
+    // Load programs on page load
+    loadPrograms();
+  </script>
+</body>
+</html>
