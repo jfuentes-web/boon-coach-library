@@ -9,26 +9,25 @@ export default async function handler(req, res) {
   try {
     const { searchQuery } = req.body;
 
-    const prompt = `You are a research assistant for professional coaches at Boon, a coaching company.
+    const prompt = `You are a research assistant for professional coaches at Boon.
+Search the web for 4 recent articles about: ${searchQuery}
 
-Search the web for 4 high-quality recent articles about: "${searchQuery}"
-
-For each article, output it using EXACTLY this format:
+For each article output EXACTLY this block format:
 
 ARTICLE
-TITLE: the full article title here
-URL: the full url here
-SOURCE: publication name here
-TAG: one of ai or coaching or leadership or wellbeing or skills
-SUMMARY: a two sentence summary for coaches with no special characters
-TAKEAWAY1: first key takeaway
-TAKEAWAY2: second key takeaway
-TAKEAWAY3: third key takeaway
+TITLE: article title here
+URL: full url here
+SOURCE: publication name
+TAG: ai
+SUMMARY: two sentence summary here no apostrophes
+TAKEAWAY1: first takeaway here
+TAKEAWAY2: second takeaway here
+TAKEAWAY3: third takeaway here
 END
 
-Repeat the ARTICLE...END block for each article. Do not use JSON. Do not use quotes or apostrophes anywhere. Use plain text only.`;
+Output only these blocks. No JSON. No quotes. No apostrophes.`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,10 +43,10 @@ Repeat the ARTICLE...END block for each article. Do not use JSON. Do not use quo
       })
     });
 
-    const data = await response.json();
+    const data = await apiRes.json();
 
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data.error?.message || 'API error' });
+    if (!apiRes.ok) {
+      return res.status(apiRes.status).json({ error: data.error?.message || 'API error' });
     }
 
     let rawText = '';
@@ -56,22 +55,18 @@ Repeat the ARTICLE...END block for each article. Do not use JSON. Do not use quo
     }
 
     const articles = [];
-    const articleBlocks = rawText.split('ARTICLE').slice(1);
+    const blocks = rawText.split('ARTICLE').slice(1);
 
-    for (const block of articleBlocks) {
+    for (const block of blocks) {
       const get = (field) => {
-        const regex = new RegExp(field + ':\\s*(.+?)(?:\\n|$)');
-        const match = block.match(regex);
+        const match = block.match(new RegExp(field + ':\\s*(.+?)(?:\\n|$)'));
         return match ? match[1].trim() : '';
       };
-
       const title = get('TITLE');
-      const url = get('URL');
       if (!title) continue;
-
       articles.push({
         title,
-        url,
+        url: get('URL'),
         source: get('SOURCE'),
         tag: get('TAG') || 'ai',
         summary: get('SUMMARY'),
@@ -79,10 +74,9 @@ Repeat the ARTICLE...END block for each article. Do not use JSON. Do not use quo
       });
     }
 
-    res.status(200).json({ articles });
+    return res.status(200).json({ articles });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 }
