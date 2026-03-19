@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const prompt = `You are a research assistant for professional coaches at Boon.
 Search the web for 4 recent articles about: ${searchQuery}
 
-For each article output EXACTLY this block format:
+For each article output EXACTLY this block format with no deviations:
 
 ARTICLE
 TITLE: article title here
@@ -25,7 +25,7 @@ TAKEAWAY2: second takeaway here
 TAKEAWAY3: third takeaway here
 END
 
-Output only these blocks. No JSON. No quotes. No apostrophes.`;
+Output only these blocks. No JSON. No quotes. No apostrophes. No colons inside values.`;
 
     const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -60,7 +60,12 @@ Output only these blocks. No JSON. No quotes. No apostrophes.`;
     for (const block of blocks) {
       const get = (field) => {
         const match = block.match(new RegExp(field + ':\\s*(.+?)(?:\\n|$)'));
-        return match ? match[1].trim() : '';
+        if (!match) return '';
+        return match[1].trim()
+          .replace(/'/g, '')
+          .replace(/"/g, '')
+          .replace(/`/g, '')
+          .replace(/\\/g, '');
       };
       const title = get('TITLE');
       if (!title) continue;
