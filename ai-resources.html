@@ -658,7 +658,7 @@
 
         const articles = data.articles;
         if (!articles || articles.length === 0) {
-          throw new Error('No articles found — please try again');
+          throw new Error('No articles found, please try again');
         }
 
         renderResults(articles, displayLabel, tag);
