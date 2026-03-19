@@ -644,57 +644,21 @@
       }, 4000);
 
       try {
-        const prompt = `You are a research assistant for professional coaches at Boon, a coaching and leadership development company.
-
-Search the web for 4 high-quality recent articles about: "${searchQuery}"
-
-Return ONLY a raw JSON array — no markdown, no backticks, no preamble. Use this exact structure:
-[{"title":"...","url":"...","source":"...","tag":"ai","summary":"One or two sentences max. No quotes or apostrophes inside strings.","takeaways":["Short point","Short point","Short point"]}]
-
-Rules:
-- tag must be one of: ai, coaching, leadership, wellbeing, skills
-- summary: max 180 characters, no apostrophes, no inner quotes
-- takeaways: max 3 items, each under 80 characters, no apostrophes
-- Prioritize 2023-2025 articles
-- Return at least 2 results`;
-
         const response = await fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 2000,
-            tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-            messages: [{ role: 'user', content: prompt }]
-          })
+          body: JSON.stringify({ searchQuery, displayLabel })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error?.message || 'API error');
+          throw new Error(data.error || 'API error');
         }
 
-        // Extract all text blocks from response
-        let rawText = '';
-        for (const block of data.content) {
-          if (block.type === 'text') rawText += block.text;
-        }
-
-        // Robustly extract JSON array from response
-        let articles;
-        try {
-          // Remove markdown fences
-          let clean = rawText.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
-          // Find the first [ and last ] to extract just the array
-          const start = clean.indexOf('[');
-          const end = clean.lastIndexOf(']');
-          if (start === -1 || end === -1) throw new Error('No JSON array found');
-          const jsonStr = clean.slice(start, end + 1);
-          articles = JSON.parse(jsonStr);
-        } catch(e) {
-          console.error('Parse error:', e, 'Raw text:', rawText);
-          throw new Error('Could not parse article results — please try again');
+        const articles = data.articles;
+        if (!articles || articles.length === 0) {
+          throw new Error('No articles found — please try again');
         }
 
         renderResults(articles, displayLabel, tag);

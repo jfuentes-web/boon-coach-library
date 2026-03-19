@@ -7,13 +7,13 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { searchQuery, displayLabel } = req.body;
+    const { searchQuery } = req.body;
 
     const prompt = `You are a research assistant for professional coaches at Boon, a coaching company.
 
 Search the web for 4 high-quality recent articles about: "${searchQuery}"
 
-For each article, output it using EXACTLY this format with these exact separators:
+For each article, output it using EXACTLY this format:
 
 ARTICLE
 TITLE: the full article title here
@@ -50,19 +50,17 @@ Repeat the ARTICLE...END block for each article. Do not use JSON. Do not use quo
       return res.status(response.status).json({ error: data.error?.message || 'API error' });
     }
 
-    // Extract all text from response blocks
     let rawText = '';
     for (const block of data.content) {
       if (block.type === 'text') rawText += block.text;
     }
 
-    // Parse the structured text format
     const articles = [];
     const articleBlocks = rawText.split('ARTICLE').slice(1);
 
     for (const block of articleBlocks) {
       const get = (field) => {
-        const regex = new RegExp(`${field}:\\s*(.+?)(?:\\n|$)`);
+        const regex = new RegExp(field + ':\\s*(.+?)(?:\\n|$)');
         const match = block.match(regex);
         return match ? match[1].trim() : '';
       };
