@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resources – Boon Coach Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #466FF6;
+      --dark-blue: #3A57A7;
+      --peach: #F58E83;
+      --purple: #BC8EC0;
+      --light-grey: #EFF0F1;
+      --text: #1a1a2e;
+      --text-light: #5a5a7a;
+      --white: #ffffff;
+      --card-shadow: 0 2px 12px rgba(70,111,246,0.08);
+      --card-hover-shadow: 0 6px 24px rgba(70,111,246,0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'PT Sans', sans-serif;
+      background: #f7f8fc;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid #e2e5f0;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-mark {
+      width: 32px;
+      height: 32px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      padding: 6px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--text-light);
+      transition: all 0.15s;
+    }
+
+    .nav-links a:hover { background: var(--light-grey); color: var(--text); }
+    .nav-links a.active { background: var(--blue); color: white; }
+
+    /* ── HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--dark-blue) 0%, var(--blue) 60%, #6b8ef8 100%);
+      padding: 48px 32px 40px;
+      color: white;
+    }
+
+    .page-header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .header-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: #a0ffb0;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      opacity: 0.88;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 36px 24px 60px;
+    }
+
+    /* ── TOPIC SELECTOR ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .topic-btn {
+      background: white;
+      border: 2px solid #e2e5f0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-align: left;
+      font-family: 'PT Sans', sans-serif;
+    }
+
+    .topic-btn:hover {
+      border-color: var(--blue);
+      background: #f0f4ff;
+      transform: translateY(-1px);
+      box-shadow: var(--card-shadow);
+    }
+
+    .topic-btn.selected {
+      border-color: var(--blue);
+      background: linear-gradient(135deg, #f0f4ff, #e8edff);
+      box-shadow: var(--card-shadow);
+    }
+
+    .topic-btn.selected .topic-icon {
+      background: var(--blue);
+      color: white;
+    }
+
+    .topic-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--light-grey);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-bottom: 8px;
+      transition: all 0.18s;
+    }
+
+    .topic-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e2e5f0;
+      border-radius: 10px;
+      font-family: 'PT Sans', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: white;
+      transition: border-color 0.15s;
+      outline: none;
+    }
+
+    .search-input:focus { border-color: var(--blue); }
+    .search-input::placeholder { color: #a0a0bc; }
+
+    .search-btn {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-family: 'PT Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover { background: var(--dark-blue); transform: translateY(-1px); }
+    .search-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* ── LOADING ── */
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .loading-state.visible { display: block; }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--light-grey);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: 15px;
+      color: var(--text-light);
+    }
+
+    .loading-sub {
+      font-size: 13px;
+      color: #a0a0bc;
+      margin-top: 6px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-light);
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+    .empty-state p { font-size: 14px; line-height: 1.6; }
+
+    /* ── RESULTS ── */
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .results-label {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .results-label strong { color: var(--text); }
+
+    .results-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .article-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.2s;
+      border: 1px solid #e8ebf4;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeInUp 0.3s ease both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .article-card:hover {
+      box-shadow: var(--card-hover-shadow);
+      transform: translateY(-2px);
+    }
+
+    .article-card:nth-child(2) { animation-delay: 0.06s; }
+    .article-card:nth-child(3) { animation-delay: 0.12s; }
+    .article-card:nth-child(4) { animation-delay: 0.18s; }
+    .article-card:nth-child(5) { animation-delay: 0.24s; }
+
+    .article-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .article-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: var(--light-grey);
+      color: var(--text-light);
+    }
+
+    .article-tag.ai { background: #e8edff; color: var(--blue); }
+    .article-tag.coaching { background: #fdecea; color: #c0504d; }
+    .article-tag.leadership { background: #f3eeff; color: #7c4db0; }
+    .article-tag.wellbeing { background: #fff3e8; color: #c47a2b; }
+    .article-tag.skills { background: #e8f7ee; color: #2a8a52; }
+
+    .article-source {
+      font-size: 12px;
+      color: #a0a0bc;
+      white-space: nowrap;
+    }
+
+    .article-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      text-decoration: none;
+    }
+
+    .article-title:hover { color: var(--blue); }
+
+    .article-summary {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+
+    .article-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
+    }
+
+    .article-takeaways {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .article-takeaways strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .article-takeaways ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .article-takeaways li {
+      padding: 3px 0 3px 16px;
+      position: relative;
+    }
+
+    .article-takeaways li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-size: 12px;
+    }
+
+    .read-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+      padding: 7px 14px;
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+
+    .read-link:hover {
+      background: var(--blue);
+      color: white;
+    }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer {
+      margin-top: 32px;
+      padding: 14px 18px;
+      background: #f7f8fc;
+      border: 1px solid #e2e5f0;
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.6;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .disclaimer-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* ── ERROR ── */
+    .error-state {
+      display: none;
+      background: #fff5f5;
+      border: 1px solid #fbc8c8;
+      border-radius: 10px;
+      padding: 20px 24px;
+      color: #c0504d;
+      font-size: 14px;
+    }
+
+    .error-state.visible { display: block; }
+
+    @media (max-width: 600px) {
+      .topic-grid { grid-template-columns: repeat(2, 1fr); }
+      nav { padding: 0 16px; }
+      main { padding: 24px 16px 48px; }
+      .page-header { padding: 32px 16px; }
+      .search-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">B</div>
+      <span class="nav-logo-text">Coach Library</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Programs</a>
+      <a href="index.html#library">Full Library</a>
+      <a href="ai-resources.html" class="active">AI Resources</a>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div class="header-badge">Live Web Search</div>
+      <h1>AI Resources for Coaches</h1>
+      <p>Stay current on how AI is reshaping coaching, leadership, and the workplace. Pick a topic below to surface fresh, relevant articles — summarized for coaches.</p>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <div class="section-label">Browse by topic</div>
+    <div class="topic-grid" id="topicGrid">
+      <!-- topics injected by JS -->
+    </div>
+
+    <div class="search-row">
+      <input
+        type="text"
+        class="search-input"
+        id="customInput"
+        placeholder="Or type your own topic — e.g. "AI and burnout" or "coaching presence""
+      />
+      <button class="search-btn" id="searchBtn" onclick="triggerSearch()">
+        <span id="searchBtnIcon">🔍</span>
+        <span id="searchBtnText">Find Articles</span>
+      </button>
+    </div>
+
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loadingText">Searching the web for you…</div>
+      <div class="loading-sub">This usually takes 15–20 seconds</div>
+    </div>
+
+    <div class="error-state" id="errorState"></div>
+
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">🧠</div>
+      <h3>Ready when you are</h3>
+      <p>Choose a topic above or type your own to find the latest articles on AI, coaching, and leadership.</p>
+    </div>
+
+    <div id="resultsSection" style="display:none;">
+      <div class="results-header">
+        <div class="results-label" id="resultsLabel"></div>
+      </div>
+      <div class="results-grid" id="resultsGrid"></div>
+      <div class="disclaimer">
+        <span class="disclaimer-icon">💡</span>
+        <span>Articles are sourced live from the web via AI-assisted search. Links open in a new tab. Boon does not endorse any specific publication. <strong>Reminder:</strong> never enter client names, identifiers, or confidential session details into any AI tool.</span>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const TOPICS = [
+      { id: 'ai-coaching', label: 'AI & Coaching', icon: '🤝', tag: 'ai', query: 'AI artificial intelligence and coaching practice 2024 2025' },
+      { id: 'context-switching', label: 'Context Switching', icon: '🔄', tag: 'skills', query: 'context switching attention management productivity coaching' },
+      { id: 'leadership-ai', label: 'Leading in the AI Era', icon: '🚀', tag: 'leadership', query: 'leadership skills AI era managers workplace 2024 2025' },
+      { id: 'human-skills', label: 'Human Skills at Work', icon: '💬', tag: 'skills', query: 'human skills soft skills workplace AI automation coaching' },
+      { id: 'burnout', label: 'Burnout & Wellbeing', icon: '🌱', tag: 'wellbeing', query: 'workplace burnout wellbeing coaching resilience 2024 2025' },
+      { id: 'deep-listening', label: 'Deep Listening', icon: '👂', tag: 'coaching', query: 'deep listening active listening coaching presence skill' },
+      { id: 'ai-ethics', label: 'AI Ethics & Trust', icon: '⚖️', tag: 'ai', query: 'AI ethics trust workplace coaching employees 2024 2025' },
+      { id: 'future-work', label: 'Future of Work', icon: '🏢', tag: 'leadership', query: 'future of work AI hybrid workforce coaching 2025' },
+    ];
+
+    let selectedTopic = null;
+
+    // Build topic grid
+    const grid = document.getElementById('topicGrid');
+    TOPICS.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'topic-btn';
+      btn.id = `topic-${t.id}`;
+      btn.innerHTML = `<div class="topic-icon">${t.icon}</div><div class="topic-name">${t.label}</div>`;
+      btn.onclick = () => selectTopic(t);
+      grid.appendChild(btn);
+    });
+
+    function selectTopic(t) {
+      // Deselect all
+      document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById(`topic-${t.id}`).classList.add('selected');
+      document.getElementById('customInput').value = '';
+      selectedTopic = t;
+      triggerSearch(t.query, t.label, t.tag);
+    }
+
+    async function triggerSearch(query, label, defaultTag) {
+      const customVal = document.getElementById('customInput').value.trim();
+
+      if (!query && !customVal) {
+        alert('Please select a topic or type something in the search box.');
+        return;
+      }
+
+      const searchQuery = query || `${customVal} coaching workplace`;
+      const displayLabel = label || `"${customVal}"`;
+      const tag = defaultTag || 'ai';
+
+      // UI state
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('resultsSection').style.display = 'none';
+      document.getElementById('errorState').classList.remove('visible');
+      document.getElementById('loadingState').classList.add('visible');
+      document.getElementById('searchBtn').disabled = true;
+
+      const messages = [
+        'Searching the web for you…',
+        'Reading through recent articles…',
+        'Summarizing what\'s most useful…',
+        'Almost there…'
+      ];
+      let msgIdx = 0;
+      const msgInterval = setInterval(() => {
+        msgIdx = (msgIdx + 1) % messages.length;
+        document.getElementById('loadingText').textContent = messages[msgIdx];
+      }, 4000);
+
+      try {
+        const prompt = `You are a research assistant for professional coaches at Boon, a coaching and leadership development company.
+
+Search the web for 4–5 high-quality, recent articles about: "${searchQuery}"
+
+For each article found, return a JSON array with this structure:
+[
+  {
+    "title": "Article title",
+    "url": "Full URL to the article",
+    "source": "Publication name (e.g. Harvard Business Review, Forbes, McKinsey)",
+    "tag": "One of: ai, coaching, leadership, wellbeing, skills",
+    "summary": "2–3 sentence summary of the article written for a professional coach — what it covers and why it matters for coaching practice",
+    "takeaways": ["Key takeaway 1", "Key takeaway 2", "Key takeaway 3"]
+  }
+]
+
+Return ONLY valid JSON — no markdown, no preamble, no explanation. If you cannot find enough articles, return what you can (minimum 2). Prioritize articles from 2023–2025.`;
+
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error?.message || 'API error');
+        }
+
+        // Extract text content from response blocks
+        let rawText = '';
+        for (const block of data.content) {
+          if (block.type === 'text') rawText += block.text;
+        }
+
+        // Strip markdown code fences if present
+        const clean = rawText.replace(/```json|```/g, '').trim();
+
+        let articles;
+        try {
+          articles = JSON.parse(clean);
+        } catch(e) {
+          // Try to extract JSON array from text
+          const match = clean.match(/\[[\s\S]*\]/);
+          if (match) {
+            articles = JSON.parse(match[0]);
+          } else {
+            throw new Error('Could not parse article results');
+          }
+        }
+
+        renderResults(articles, displayLabel, tag);
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('errorState').textContent = `Something went wrong while fetching articles: ${err.message}. Please try again in a moment.`;
+        document.getElementById('errorState').classList.add('visible');
+        document.getElementById('emptyState').style.display = 'block';
+      } finally {
+        clearInterval(msgInterval);
+        document.getElementById('loadingState').classList.remove('visible');
+        document.getElementById('searchBtn').disabled = false;
+      }
+    }
+
+    function renderResults(articles, label, defaultTag) {
+      const grid = document.getElementById('resultsGrid');
+      const section = document.getElementById('resultsSection');
+      const resultsLabel = document.getElementById('resultsLabel');
+
+      grid.innerHTML = '';
+      resultsLabel.innerHTML = `<strong>${articles.length} articles</strong> found for ${label}`;
+
+      articles.forEach((a, i) => {
+        const tag = a.tag || defaultTag || 'ai';
+        const card = document.createElement('div');
+        card.className = 'article-card';
+        card.style.animationDelay = `${i * 0.06}s`;
+
+        const takeawaysHTML = a.takeaways && a.takeaways.length
+          ? `<div class="article-takeaways">
+              <strong>Key takeaways</strong>
+              <ul>${a.takeaways.map(t => `<li>${t}</li>`).join('')}</ul>
+            </div>`
+          : '';
+
+        card.innerHTML = `
+          <div class="article-top">
+            <div class="article-meta">
+              <span class="article-tag ${tag}">${tag}</span>
+              ${a.source ? `<span class="article-source">${a.source}</span>` : ''}
+            </div>
+          </div>
+          <a href="${a.url || '#'}" target="_blank" rel="noopener" class="article-title">${a.title}</a>
+          <p class="article-summary">${a.summary}</p>
+          ${takeawaysHTML}
+          <div class="article-footer">
+            ${a.url && a.url !== '#'
+              ? `<a href="${a.url}" target="_blank" rel="noopener" class="read-link">Read article ↗</a>`
+              : '<span></span>'
+            }
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      section.style.display = 'block';
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Allow enter key in input
+    document.getElementById('customInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') triggerSearch();
+    });
+
+    // Clear topic selection when typing custom
+    document.getElementById('customInput').addEventListener('input', () => {
+      document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('selected'));
+      selectedTopic = null;
+    });
+  </script>
+
+</body>
+</html>
