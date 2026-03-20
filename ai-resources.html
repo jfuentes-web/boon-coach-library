@@ -504,6 +504,157 @@
       .page-header { padding: 32px 16px; }
       .search-row { flex-direction: column; }
     }
+
+    /* ── PII BANNER ── */
+    .pii-banner {
+      background: linear-gradient(135deg, #fff8e8, #fff3d6);
+      border: 1px solid #f5c842;
+      border-left: 4px solid #f5c842;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .pii-banner-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .pii-banner-text { font-size: 13px; color: #7a5c00; line-height: 1.6; }
+    .pii-banner-text strong { color: #5a4000; display: block; margin-bottom: 3px; font-size: 14px; }
+
+    /* ── ICF LINKS ── */
+    .icf-section {
+      background: white;
+      border: 1px solid #e8ebf4;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .icf-section-left { display: flex; align-items: center; gap: 12px; }
+    .icf-icon {
+      width: 40px; height: 40px;
+      background: #e8edff;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .icf-text h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .icf-text p { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+    .icf-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .icf-link {
+      font-size: 12px; font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+      padding: 6px 12px;
+      border: 1.5px solid var(--blue);
+      border-radius: 7px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .icf-link:hover { background: var(--blue); color: white; }
+
+    /* ── COACH TOOL ── */
+    .tool-section {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 2px solid #e8ebf4;
+    }
+    .tool-header { margin-bottom: 20px; }
+    .tool-header h2 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .tool-header p { font-size: 14px; color: var(--text-light); line-height: 1.6; }
+
+    .tool-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tool-tab {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 2px solid #e2e5f0;
+      background: white;
+      font-family: 'PT Sans', sans-serif;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer; color: var(--text-light);
+      transition: all 0.15s;
+    }
+    .tool-tab:hover { border-color: var(--blue); color: var(--blue); }
+    .tool-tab.active { background: var(--blue); border-color: var(--blue); color: white; }
+
+    .tool-card {
+      background: white;
+      border: 1px solid #e8ebf4;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+    }
+    .tool-input-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .tool-input {
+      flex: 1; min-width: 200px;
+      padding: 11px 14px;
+      border: 2px solid #e2e5f0;
+      border-radius: 9px;
+      font-family: 'PT Sans', sans-serif;
+      font-size: 14px; color: var(--text);
+      background: white; outline: none;
+      transition: border-color 0.15s;
+    }
+    .tool-input:focus { border-color: var(--blue); }
+    .tool-input::placeholder { color: #a0a0bc; }
+    .tool-btn {
+      background: var(--blue); color: white;
+      border: none; border-radius: 9px;
+      padding: 11px 20px;
+      font-family: 'PT Sans', sans-serif;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .tool-btn:hover { background: var(--dark-blue); }
+    .tool-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .tool-hint { font-size: 12px; color: var(--text-light); margin-bottom: 16px; line-height: 1.5; }
+
+    .tool-output {
+      display: none;
+      background: #f7f8fc;
+      border: 1px solid #e2e5f0;
+      border-radius: 9px;
+      padding: 20px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+    .tool-output.visible { display: block; animation: fadeInUp 0.3s ease; }
+    .tool-output-header {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 12px;
+    }
+    .tool-loading {
+      display: none; text-align: center;
+      padding: 24px; color: var(--text-light); font-size: 14px;
+    }
+    .tool-loading.visible { display: block; }
+    .tool-spinner {
+      width: 28px; height: 28px;
+      border: 2px solid var(--light-grey);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 10px;
+    }
+    .copy-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-light); background: white;
+      border: 1.5px solid #e2e5f0; border-radius: 7px;
+      padding: 5px 12px; cursor: pointer;
+      margin-top: 12px; transition: all 0.15s;
+      font-family: 'PT Sans', sans-serif;
+    }
+    .copy-btn:hover { border-color: var(--blue); color: var(--blue); }
   </style>
 </head>
 <body>
@@ -532,6 +683,31 @@
 
   <!-- MAIN -->
   <main>
+
+    <!-- PII REMINDER -->
+    <div class="pii-banner">
+      <span class="pii-banner-icon">⚠️</span>
+      <div class="pii-banner-text">
+        <strong>Reminder: Protect client privacy</strong>
+        Never enter client names, employer details, session content, or any personally identifiable information (PII) into AI tools — including this page. Use general topics only.
+      </div>
+    </div>
+
+    <!-- ICF LINKS -->
+    <div class="icf-section">
+      <div class="icf-section-left">
+        <div class="icf-icon">📋</div>
+        <div class="icf-text">
+          <h4>ICF Ethics &amp; AI Guidelines</h4>
+          <p>The 2025 ICF Code of Ethics now requires coaches to disclose AI use to clients.<br>Stay informed with these official resources.</p>
+        </div>
+      </div>
+      <div class="icf-links">
+        <a class="icf-link" href="https://coachingfederation.org/credentialing/coaching-ethics/icf-code-of-ethics/" target="_blank" rel="noopener">ICF Code of Ethics ↗</a>
+        <a class="icf-link" href="https://coachingfederation.org/resource/icf-artificial-intelligence-ai-coaching-framework-and-standards/" target="_blank" rel="noopener">ICF AI Framework ↗</a>
+        <a class="icf-link" href="https://coachingfederation.org/credentialing/coaching-ethics/icf-ethical-resources/" target="_blank" rel="noopener">Ethics Resources ↗</a>
+      </div>
+    </div>
 
     <div class="section-label">Browse by topic</div>
     <div class="topic-grid" id="topicGrid">
@@ -575,6 +751,39 @@
         <span>Articles are sourced live from the web via AI-assisted search. Links open in a new tab. Boon does not endorse any specific publication. <strong>Reminder:</strong> never enter client names, identifiers, or confidential session details into any AI tool.</span>
       </div>
     </div>
+
+    <!-- COACHING TOOL SECTION -->
+    <div class="tool-section">
+      <div class="tool-header">
+        <h2>Coaching Tool Builder</h2>
+        <p>Generate AI-powered coaching questions or a client worksheet on any topic — ready to use in your next session. Do not include client names or identifying details.</p>
+      </div>
+
+      <div class="tool-tabs">
+        <button class="tool-tab active" id="tabQuestions" onclick="switchTab('questions')">💬 Question Generator</button>
+        <button class="tool-tab" id="tabWorksheet" onclick="switchTab('worksheet')">📄 Worksheet Creator</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-input-row">
+          <input type="text" class="tool-input" id="toolInput" placeholder="Enter a topic — e.g. managing overwhelm, career transition, building confidence" />
+          <button class="tool-btn" id="toolBtn" onclick="runTool()">Generate</button>
+        </div>
+        <p class="tool-hint" id="toolHint">Generates 8–10 powerful coaching questions on your topic, ordered from awareness-building to action-oriented.</p>
+
+        <div class="tool-loading" id="toolLoading">
+          <div class="tool-spinner"></div>
+          <span id="toolLoadingText">Generating your questions…</span>
+        </div>
+
+        <div class="tool-output" id="toolOutput">
+          <div class="tool-output-header" id="toolOutputHeader"></div>
+          <div id="toolOutputBody"></div>
+          <button class="copy-btn" onclick="copyOutput()">📋 Copy to clipboard</button>
+        </div>
+      </div>
+    </div>
+
 
   </main>
 
@@ -658,7 +867,7 @@
 
         const articles = data.articles;
         if (!articles || articles.length === 0) {
-          throw new Error('No articles found, please try again');
+          throw new Error('No articles found — please try again');
         }
 
         renderResults(articles, displayLabel, tag);
@@ -719,6 +928,84 @@
       section.style.display = 'block';
       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+
+    // ── COACHING TOOL ──
+    let currentTab = 'questions';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(tab === 'questions' ? 'tabQuestions' : 'tabWorksheet').classList.add('active');
+      document.getElementById('toolHint').textContent = tab === 'questions'
+        ? 'Generates 8–10 powerful coaching questions on your topic, ordered from awareness-building to action-oriented.'
+        : 'Creates a structured client worksheet with reflection prompts, exercises, and space for notes.';
+      document.getElementById('toolOutput').classList.remove('visible');
+      document.getElementById('toolLoading').classList.remove('visible');
+    }
+
+    async function runTool() {
+      const topic = document.getElementById('toolInput').value.trim();
+      if (!topic) { alert('Please enter a topic first.'); return; }
+
+      document.getElementById('toolLoading').classList.add('visible');
+      document.getElementById('toolOutput').classList.remove('visible');
+      document.getElementById('toolBtn').disabled = true;
+      document.getElementById('toolLoadingText').textContent = currentTab === 'questions'
+        ? 'Generating coaching questions…'
+        : 'Building your worksheet…';
+
+      const isQuestions = currentTab === 'questions';
+      const prompt = isQuestions
+        ? `You are an expert ICF-certified coach. Generate 10 powerful coaching questions for a coaching session about: "${topic}". 
+
+Format as a numbered list. Start with awareness-building questions, move to exploration, then action and commitment. Each question should be open-ended, thought-provoking, and client-centered. Do not include any preamble — just the numbered list of questions.`
+        : `You are an expert ICF-certified coach. Create a structured coaching worksheet for a client working on: "${topic}".
+
+Include these sections:
+1. Topic Overview (2-3 sentences framing the topic)
+2. Reflection Questions (5 questions to complete before the session)
+3. Self-Assessment (a simple 1-10 scale exercise with 2-3 dimensions)
+4. Key Insights (space for the client to capture what they discover)
+5. Commitments & Next Steps (space for 2-3 concrete actions)
+
+Format it clearly with section headers. Keep language warm, direct, and client-friendly. Do not include a preamble.`;
+
+      try {
+        const response = await fetch('/api/tool', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'API error');
+
+        document.getElementById('toolOutputHeader').textContent = isQuestions
+          ? `Coaching Questions — ${topic}`
+          : `Client Worksheet — ${topic}`;
+        document.getElementById('toolOutputBody').textContent = data.result;
+        document.getElementById('toolOutput').classList.add('visible');
+
+      } catch(err) {
+        alert('Something went wrong: ' + err.message + '. Please try again.');
+      } finally {
+        document.getElementById('toolLoading').classList.remove('visible');
+        document.getElementById('toolBtn').disabled = false;
+      }
+    }
+
+    function copyOutput() {
+      const text = document.getElementById('toolOutputBody').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy to clipboard', 2000);
+      });
+    }
+
+    document.getElementById('toolInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') runTool();
+    });
 
     // Allow enter key in input
     document.getElementById('customInput').addEventListener('keydown', (e) => {
